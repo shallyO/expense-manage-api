@@ -18,8 +18,6 @@ return new class extends Migration
             $table->date('expense_date');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('payment_method_id');
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
             $table->timestamps();
         });
     }

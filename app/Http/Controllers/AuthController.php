@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -32,20 +33,47 @@ if ($validated->fails()) {
         try{
 
             $user = User::create([
-                'name' => $request->name,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json([
-                'access_token' => $token,
-                'user' => $user
-            ], 200);
+
+          return response()->json([
+            'message' => 'Registered successfully',
+            'user' => $user
+        ], 201);
 
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()],403);
         }
     }
+
+
+public function login(Request $request)
+{
+    $request->validate([
+        'login' => 'required',   // email OR phone number
+        'password' => 'required'
+    ]);
+
+    // Find user by email or phone
+    $user = User::where('email', $request->login)
+                ->orWhere('phone_number', $request->login)
+                ->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'Invalid credentials'
+        ], 401);
+    }
+
+    return response()->json([
+        'message' => 'Login successful',
+        'user' => $user
+    ]);
+}
 }
