@@ -56,24 +56,37 @@ if ($validated->fails()) {
 public function login(Request $request)
 {
     $request->validate([
-        'login' => 'required',   // email OR phone number
+        'login' => 'required',
         'password' => 'required'
     ]);
 
-    // Find user by email or phone
-    $user = User::where('email', $request->login)
-                ->orWhere('phone_number', $request->login)
-                ->first();
+    $login = trim($request->login);
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
+$user = User::where('email', $login)
+            ->orWhere('phone_number', $login)
+            ->first();
+
+    // ✅ STOP if user not found
+    if (!$user) {
         return response()->json([
-            'message' => 'Invalid credentials'
+            'message' => 'User not found'
+        ], 404);
+    }
+
+    // ✅ STOP if password wrong
+    if (!Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'Invalid password'
         ], 401);
     }
 
+    // 🔑 Now safe to create token
+    $token = $user->createToken('auth_token')->plainTextToken;
+
     return response()->json([
         'message' => 'Login successful',
-        'user' => $user
+        'user' => $user,
+        'token' => $token
     ]);
 }
 }
