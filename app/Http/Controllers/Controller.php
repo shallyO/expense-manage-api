@@ -2,9 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Traits\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
-abstract class Controller
+class Controller extends BaseController
 {
-    use ApiResponse;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected function apiResponse($status, $message, $data = null, $code = 200)
+    {
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
 }
