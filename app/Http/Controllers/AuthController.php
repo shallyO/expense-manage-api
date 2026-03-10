@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\AuthRegisterRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(AuthRegisterRequest $request)
     {
-        $validated = $request->validate([
-            'first_name'    => 'required|string|max:100',
-            'last_name'     => 'required|string|max:100',
-
-            // user must provide email OR phone
-            'email' => 'nullable|email|unique:users,email|required_without:phone_number',
-            'phone_number' => 'nullable|string|unique:users,phone_number|required_without:email',
-
-            'password' => 'required|min:6|confirmed',
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
             'first_name' => $validated['first_name'],
