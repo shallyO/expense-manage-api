@@ -21,7 +21,7 @@ class AuthController extends Controller
             'phone_number' => 'nullable|string|unique:users,phone_number|required_without:email',
 
             'password' => 'required|min:6|confirmed',
-        ]);
+        ]); 
 
         $user = User::create([
             'first_name' => $validated['first_name'],
