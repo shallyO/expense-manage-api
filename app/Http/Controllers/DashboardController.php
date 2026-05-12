@@ -12,9 +12,15 @@ class DashboardController extends Controller
 
         $userId = Auth::id();
 
+    
+        $stats = [ "this_month" => 0,
+                    "this_week" => 0, 
+                    "budget_left" => 0,
+                    "top_category" => 0
+                 ];
+
+
         
-        return $this->apiResponse(true, 'Dashboard Statistics', [
-            'user' => $request->user()
-        ]);
+        return $this->apiResponse(true, 'Dashboard Statistics', $stats);
     }
 }
