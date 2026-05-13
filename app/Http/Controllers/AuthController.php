@@ -26,6 +26,7 @@ class AuthController extends Controller
         // auto login after register
         $token = $user->createToken('auth_token')->plainTextToken;
 
+
         return $this->apiResponse(
         true,
          'User registered successfully',
@@ -45,7 +46,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $username = trim($request->username);
+        $username = trim($request->username);        
 
         $user = User::where('email', $username)
                 ->orWhere('phone_number', $username)
@@ -68,20 +69,18 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-    return $this->apiResponse(
-        true,
-        'Login successful',
-        [
-        'user' => $user,
-        'token' => $token
-        ]);
+
+        return $this->apiResponse(true,'Login successful',[
+            'user' => $user,
+            'token' => $token
+            ]);
     }
+    
     public function logout(Request $request){
+
         $request->user()->currentAccessToken()->delete();
 
-    return $this->apiResponse(
-        true,
-        'Logged out successfully');
+        return $this->apiResponse(true,'Logged out successfully');
     }
 
 }
