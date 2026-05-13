@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->decimal('amount', 10, 2);
-            $table->string('category_id');
-            $table->text('note')->nullable();
             $table->date('date');
+            $table->string('notes')->nullable();
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('expense');
     }
 };
