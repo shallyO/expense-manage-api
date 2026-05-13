@@ -30,7 +30,7 @@ public function store(Request $request)
             201
         );
 
-    } catch (\Exception $e) {
+    } catch (\Exception $e) { 
         return response()->json([
             'success' => false,
             'message' => 'Database Error',
